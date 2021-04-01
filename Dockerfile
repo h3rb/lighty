@@ -1,7 +1,5 @@
 FROM alpine:3.7
 
-RUN adduser www-data -G www-data -s /bin/false -D -h /home/www-data
-
 RUN apk update && apk upgrade && apk add \
     bash git nodejs-npm nodejs parallel wget curl lynx make gcc screen python \
     lighttpd \
@@ -27,10 +25,12 @@ RUN apk update && apk upgrade && apk add \
     php7-dom && \
     rm -rf /var/cache/apk/*
 
+RUN adduser www-data -G www-data -s /bin/false -D -h /home/www-data
+
 ADD app/php.ini /etc/php7/php.ini
 ADD app/lighttpd.conf /etc/lighttpd/lighttpd.conf
 COPY ./app/www /var/www
-RUN mkdir -p /run/lighttpd/ && chown www-data. /run/lighttpd/
+RUN mkdir -p /run/lighttpd/ && chown www-data /run/lighttpd/
 
 WORKDIR /app/
 ADD app/entry.sh /app/entry.sh
